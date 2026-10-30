@@ -1,0 +1,9 @@
+### AT+CFUN?
+    (no reply seen in the radio AT log)
+
+### AT+EGMR=0,7
+    (no reply seen in the radio AT log)
+
+### AT+EGMR=0,10
+    (no reply seen in the radio AT log)
+

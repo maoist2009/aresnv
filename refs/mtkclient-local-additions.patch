@@ -1,0 +1,118 @@
+diff --git a/mtk.py b/mtk.py
+index ffa27af..632fc02 100755
+--- a/mtk.py
++++ b/mtk.py
+@@ -270,6 +270,13 @@ def main():
+ 
+     da_patchmodem = da_subs.add_parser("patchmodem", parents=[base], help="patch modem for imei")
+ 
++    da_repair = da_subs.add_parser("repair", parents=[base], help="one-shot Xiaomi MTK IMEI repair: patch both md1img slots + write IMEIs")
++    da_repair.add_argument('imeis', type=str, help="imeis, separated by ,")
++    da_repair.add_argument('--product', type=str, default="thunder", help='productname')
++    da_repair.add_argument('--seed', type=str, default="3132616263646566", help='seed')
++    da_repair.add_argument('--aeskey', type=str,
++                           default="0102030405060708090A0B0C0D0E0F1011120B1415161718191A1B1C00000000", help='aeskey')
++
+     da_imei = da_subs.add_parser("imei", parents=[base], help="imei decryption/encryption")
+     da_imei.add_argument('imeis', type=str, help="imeis, separated by ,",nargs="?", default="")
+     da_imei.add_argument('--product', type=str, default="thunder", help='productname')
+diff --git a/mtkclient/Library/DA/mtk_da_handler.py b/mtkclient/Library/DA/mtk_da_handler.py
+index 00ab920..e58f084 100644
+--- a/mtkclient/Library/DA/mtk_da_handler.py
++++ b/mtkclient/Library/DA/mtk_da_handler.py
+@@ -1481,6 +1481,61 @@ class DaHandler(metaclass=LogBase):
+                     else:
+                         print("Failed to patch modem.")
+                     sys.stdout.flush()
++            elif subcmd == "repair":
++                imeis = args.imeis.split(",")
++                for i in range(len(imeis)):
++                    preimei = imeis[i][:14] + "0"
++                    imeis[i] = preimei[:14] + str(make_luhn_checksum(preimei))
++                print("Target IMEIs:", imeis)
++                # half 1: gate patch on BOTH md1img slots (kills slot roulette)
++                for slot in ("a", "b"):
++                    md1img = self.da_read_partition(partitionname="md1img" + slot)
++                    if md1img != b"":
++                        new_md1img = patch_md1img(md1img)
++                        if self.da_write_partition(partitionname="md1img" + slot, data=new_md1img):
++                            print("md1img" + slot + ": patched.")
++                        else:
++                            print("md1img" + slot + ": write FAILED.")
++                    else:
++                        print("md1img" + slot + ": read FAILED.")
++                sys.stdout.flush()
++                # half 2: identity write (same proven path as da imei --write)
++                nvdata = self.da_read_partition(partitionname="nvdata")
++                if nvdata != b"":
++                    pos = 0
++                    while pos != -1:
++                        pos = nvdata.find(b"\x4C\x44\x49\x00\x10\xEF\x0A\x00\x0A", pos + 1)
++                        if pos != -1:
++                            old_nvitem_data = nvdata[pos:pos + 0x180]
++                            nvitem_data = bytearray()
++                            x = 0
++                            for imei in imeis:
++                                data = encode_imei(imei) + b"\x00\x00"
++                                csum = calc_checksum(data, 0xA)
++                                encoded_imei = data + csum + b"\x00" * 0xE
++                                nvitem_data.extend(encoded_imei)
++                                x += 1
++                            for i in range(10 - x):
++                                data = b"\xFF" * 0xA
++                                csum = calc_checksum(data, 0xA)
++                                encoded_imei = data + csum + b"\x00" * 0xE
++                                nvitem_data.extend(encoded_imei)
++                            header = old_nvitem_data[:0x40]
++                            result = mtk.daloader.nvitem(data=header + nvitem_data,
++                                                         encrypt=True,
++                                                         otp=mtk.config.get_otp(),
++                                                         seed=bytes.fromhex(args.seed),
++                                                         aeskey=bytes.fromhex(args.aeskey),
++                                                         display=False)
++                            nvdata[pos:pos + 0x180] = header + result
++                            print("LD0B item at offset 0x%x updated." % pos)
++                    if self.da_write_partition(partitionname="nvdata", data=nvdata):
++                        print("IMEIs were written successfully")
++                    else:
++                        print("Failed to write IMEIs.")
++                else:
++                    print("Failed to read nvdata.")
++                sys.stdout.flush()
+             elif subcmd == "imei":
+                 if args.write:
+                     write = True
+diff --git a/mtkclient/Library/mtk_crypto.py b/mtkclient/Library/mtk_crypto.py
+index 382b011..ed72a9b 100644
+--- a/mtkclient/Library/mtk_crypto.py
++++ b/mtkclient/Library/mtk_crypto.py
+@@ -639,8 +639,27 @@ def create_cssd(config, product: str = "thunder"):
+ 
+ 
+ def patch_md1img(md1img):
+-    priv2048 = RSA.import_key(open("private_2048.pem", "r").read(), "")
+-    modulus_new = long_to_bytes(priv2048.n, 2048 // 8)
++    # Xiaomi/MTK IMEI-gate bypass: two unique 6-byte instruction fragments in
++    # the modem implement custom_nvram_check_imei.  Pattern-based so it works
++    # across firmware generations (site offsets move, bytes do not).
++    # Verified: ares MT6893 stock V12.5.3 + V14.0.5 (byte-equal to the working
++    # commercial tool output).  See tools/patch_md1img_generic.py in aresnv.
++    md1img = bytearray(md1img)
++    for _orig, _new in (
++        (bytes.fromhex("111f341e31fc"), bytes.fromhex("111f01d2e0db")),
++        (bytes.fromhex("111f331ec000"), bytes.fromhex("111f01d2e0db")),
++    ):
++        _idx = md1img.find(_orig)
++        if _idx != -1 and md1img.count(_orig) == 1:
++            md1img[_idx:_idx + len(_orig)] = _new
++    md1img = bytes(md1img)
++    try:
++        priv2048 = RSA.import_key(open("private_2048.pem", "r").read(), "")
++        modulus_new = long_to_bytes(priv2048.n, 2048 // 8)
++    except FileNotFoundError:
++        # no custom key generated: skip the CSSD modulus swap, gate patch alone
++        # is what ares-class devices need
++        return md1img
+     # xiaomi modulus
+     modulus_old = bytearray(
+         [0xC0, 0x76, 0x21, 0xF1, 0x95, 0x51, 0x14, 0x2D, 0x3D, 0x5D, 0x9D, 0xD5, 0x14, 0x05, 0xD5, 0xD8,

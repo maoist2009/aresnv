@@ -1,0 +1,11 @@
+4e9a192f20ec4b0f4f6d8970e525f954bb1ec3fbedfb6d06b2d04c8026847ac9  /dev/block/by-name/protect1
+85d87ab4e5d687423f4120414a0e1a6145bb2cae7b8dadbe05b8f1ad06f77909  /dev/block/by-name/protect2
+524eac45a7d7e908ebcc29c7c6d9867ef086f8d961ed6eb93080871297546d54  /dev/block/by-name/persist
+3b6a07d0d404fab4e23b6d34bc6696a6a312dd92821332385e5af7c01c421351  /dev/block/by-name/nvram
+a4b9dcb81d6e31b29c58a28e0741128130cee82b1a862c6a831bc5ecdc7f69a2  /dev/block/by-name/nvcfg
+cbaea32f289698532b91624252c7f9489b29c3f7429aaf2ef647b308ee382578  /dev/block/by-name/seccfg
+40ea4ae993cf7d7a997d7ef84fc46716e2a27477b72ccf3a2115396c0b0c2146  /dev/block/by-name/para
+c0776a65076f7229704bc56b308a05fc4fdf8bac460e056b7fe01976ee6a7879  /dev/block/by-name/proinfo
+0fa1d347be1ee05cded41f0b9a84c06e656fbb2b34919b7ef7f69c3b31337b29  /dev/block/by-name/expdb
+8066b670ed97da321b7ed99d76a747c1dc3b3c30a8e7c05c53e68c7636cac260  /dev/block/by-name/md1img_a
+d2b5459ea20cdc101b815724e55c8ab7a7ba168d7cc9bc1acf0aa848ae1abc5a  /dev/block/by-name/md1img_b

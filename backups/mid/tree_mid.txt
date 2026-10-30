@@ -1,0 +1,93 @@
+.:
+total 40
+drwxrwx--x 8 root  system  4096 2026-04-01 01:15 .
+drwxr-xr-x 8 root  root     160 2010-01-01 08:00 ..
+drwxrwx--x 4 root  system  4096 2010-01-01 08:00 APCFG
+drwx------ 2 root  root   16384 2010-01-01 08:00 lost+found
+drwxrwx--- 3 root  system  4096 2026-04-01 01:15 md
+drwxrwx--- 2 root  system  4096 2010-01-01 08:00 md3
+drwxrwx--- 2 root  system  4096 2026-04-01 01:15 md_cmn
+drwxrwx--x 2 media audio   4096 2010-01-01 08:00 media
+
+./APCFG:
+total 16
+drwxrwx--x 4 root system 4096 2010-01-01 08:00 .
+drwxrwx--x 8 root system 4096 2026-04-01 01:15 ..
+drwxrwx--x 2 root system 4096 2010-01-01 08:00 APRDCL
+drwxrwx--x 2 root system 4096 2010-01-01 08:00 APRDEB
+
+./APCFG/APRDCL:
+total 20
+drwxrwx--x 2 root system 4096 2010-01-01 08:00 .
+drwxrwx--x 4 root system 4096 2010-01-01 08:00 ..
+-rw-rw---- 1 root system   78 2010-01-01 08:00 AUXADC
+-rw-rw-r-- 1 root system 5772 2010-01-01 08:00 FILE_VER
+
+./APCFG/APRDEB:
+total 24
+drwxrwx--x 2 root system    4096 2010-01-01 08:00 .
+drwxrwx--x 4 root system    4096 2010-01-01 08:00 ..
+-rw-rw---- 1 root bluetooth  440 2026-04-01 01:09 BT_Addr
+-rw-rw---- 1 root system    6146 2010-01-01 08:00 WIFI
+-rw-rw---- 1 root system       6 2010-01-01 08:00 WIFI_CUSTOM
+
+./lost+found:
+total 20
+drwx------ 2 root root   16384 2010-01-01 08:00 .
+drwxrwx--x 8 root system  4096 2026-04-01 01:15 ..
+
+./md:
+total 12
+drwxrwx--- 3 root system 4096 2026-04-01 01:15 .
+drwxrwx--x 8 root system 4096 2026-04-01 01:15 ..
+drwxrwx--- 7 root system 4096 2026-04-01 01:15 NVRAM
+
+./md/NVRAM:
+total 28
+drwxrwx--- 7 root system 4096 2026-04-01 01:15 .
+drwxrwx--- 3 root system 4096 2026-04-01 01:15 ..
+drwxrwx--- 2 root system 4096 2026-04-01 01:15 BACKUP
+drwxrwx--- 2 root system 4096 2026-04-01 01:15 CALIBRAT
+drwxrwx--- 2 root system 4096 2026-04-01 01:15 NVD_CORE
+drwxrwx--- 2 root system 4096 2026-04-01 01:15 NVD_DATA
+drwxrwx--- 2 root system 4096 2026-04-01 01:15 NVD_IMEI
+
+./md/NVRAM/BACKUP:
+total 8
+drwxrwx--- 2 root system 4096 2026-04-01 01:15 .
+drwxrwx--- 7 root system 4096 2026-04-01 01:15 ..
+
+./md/NVRAM/CALIBRAT:
+total 8
+drwxrwx--- 2 root system 4096 2026-04-01 01:15 .
+drwxrwx--- 7 root system 4096 2026-04-01 01:15 ..
+
+./md/NVRAM/NVD_CORE:
+total 8
+drwxrwx--- 2 root system 4096 2026-04-01 01:15 .
+drwxrwx--- 7 root system 4096 2026-04-01 01:15 ..
+
+./md/NVRAM/NVD_DATA:
+total 8
+drwxrwx--- 2 root system 4096 2026-04-01 01:15 .
+drwxrwx--- 7 root system 4096 2026-04-01 01:15 ..
+
+./md/NVRAM/NVD_IMEI:
+total 8
+drwxrwx--- 2 root system 4096 2026-04-01 01:15 .
+drwxrwx--- 7 root system 4096 2026-04-01 01:15 ..
+
+./md3:
+total 8
+drwxrwx--- 2 root system 4096 2010-01-01 08:00 .
+drwxrwx--x 8 root system 4096 2026-04-01 01:15 ..
+
+./md_cmn:
+total 8
+drwxrwx--- 2 root system 4096 2026-04-01 01:15 .
+drwxrwx--x 8 root system 4096 2026-04-01 01:15 ..
+
+./media:
+total 8
+drwxrwx--x 2 media audio  4096 2010-01-01 08:00 .
+drwxrwx--x 8 root  system 4096 2026-04-01 01:15 ..

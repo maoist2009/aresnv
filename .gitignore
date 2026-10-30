@@ -1,0 +1,71 @@
+# ---- firmware images / partition dumps: NEVER commit ----
+*.img
+*.bin
+*.raw
+*.rom
+*.ofp
+*.payload
+*.crp
+*.mbn
+
+# sparse / android images and ota
+*.new.dat
+*.patch.dat
+payload*
+
+# ---- extracted filesystem trees (bulk) ----
+analysis/extracted/
+analysis/snap_20261024/cur/
+analysis/snap_20261024/working/
+analysis/snap_20261024/p1cur/
+analysis/snap_20261024/p1work/
+analysis/fw/
+analysis/donor*/
+analysis/protect1_trees/
+analysis/pandora_run*/
+
+# ---- misc junk ----
+__pycache__/
+*.pyc
+*.state
+*.log.bak
+dumps/
+bkp_head/
+tmp/
+.DS_Store
+
+# notes: the byte-exact huge listings
+analysis/*.txt
+!analysis/md1rom_strings.txt
+mtk_imei/
+
+# proprietary / regenerable large artifacts
+out/PandoraTool.packed.exe
+out/pandora_mem.strings.txt
+out/pandora_mem.u16.txt
+out/protect1.ext4
+out/protect1_x/
+tools/vendor_libmtk-ril.so
+
+# device-identifying / device-NV content: never in the public repo
+backups/**/*.log
+backups/**/sha256*.txt
+out/*.log
+out/nvtree*
+out/tar_IM03_001
+out/mtkp/
+out/upx*
+analysis/md1rom_strings.txt
+analysis/absurd_test/
+mtk-imei-switcheroo/
+
+# raw logs stay on disk, out of the repo (summary notes only)
+notes/lk_log_from_expdb.txt
+notes/pandora_messages.md
+*.log
+tools/dev_ril_log_on.sh
+
+attic/
+
+# per-device evidence hashes: local only
+refs/IMG-SHA256.txt
